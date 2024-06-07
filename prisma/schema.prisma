@@ -10,6 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id             String @id @default(cuid())
+  email          String @unique
+  hashedPassword String
+  // one to one relation
+  // post           Post?
+
+  // one to many relation | many to many relation
+  posts Post[]
+}
+
 model Post {
   id        String   @id @default(cuid())
   title     String
@@ -17,9 +28,19 @@ model Post {
   content   String
   published Boolean? @default(false)
   updatedAt DateTime @updatedAt
-
   createdAt DateTime @default(now()) // @map("created_at") // use snake_case in database
+  // one to one relation
+  // author    User     @relation(fields: [authorId], references: [id])
+  // authorId  String   @unique
+
+  // one to many relation
+  // author   User   @relation(fields: [authorId], references: [id])
+  // authorId String
+
+  // many to many relation
+  authors User[]
 
   // @@unique([title, slug]) // make a combined unique constraint
   // @@index([slug]) // make selecting slug faster, but slowing down insert
+  userId String
 }

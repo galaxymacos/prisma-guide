@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/db";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function createPost(formData: FormData) {
   await prisma.post.create({
@@ -13,7 +13,7 @@ export async function createPost(formData: FormData) {
       content: formData.get("content") as string,
     },
   });
-  revalidatePath("/posts");
+  revalidateTag("posts");
 }
 
 export async function editPost(formData: FormData, id: string) {

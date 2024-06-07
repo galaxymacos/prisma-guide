@@ -8,7 +8,10 @@ const fetchPosts = async () => {
   return prisma.post.findMany();
 };
 
-const cachedFetchPosts = unstable_cache(fetchPosts, [], { tags: ["posts"] });
+// the second argument is the unique key for the cache
+const cachedFetchPosts = unstable_cache(fetchPosts, ["posts"], {
+  tags: ["posts"],
+});
 
 const PostsPage = async () => {
   const posts = await cachedFetchPosts();
