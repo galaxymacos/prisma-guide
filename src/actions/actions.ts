@@ -1,19 +1,35 @@
 "use server";
 
 import prisma from "@/lib/db";
+import { Prisma } from "@prisma/client";
 import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function createPost(formData: FormData) {
-  await prisma.post.create({
-    data: {
-      title: formData.get("title") as string,
-      slug: (formData.get("title") as string)
-        .replace(/\s+/g, "-")
-        .toLowerCase(),
-      content: formData.get("content") as string,
-    },
-  });
-  revalidateTag("posts");
+  try {
+    await prisma.post.create({
+      data: {
+        title: formData.get("title") as string,
+        slug: (formData.get("title") as string)
+          .replace(/\s+/g, "-")
+          .toLowerCase(),
+        content: formData.get("content") as string,
+        author: {
+          connect: {
+            email: "xunruan@icloud.com",
+          },
+        },
+      },
+    });
+    revalidateTag("posts");
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        console.log(
+          "This is a unique constraint violation, a new usre cannot be created with this email address"
+        );
+      }
+    }
+  }
 }
 
 export async function editPost(formData: FormData, id: string) {

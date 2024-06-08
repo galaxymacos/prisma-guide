@@ -5,6 +5,15 @@ import { createPost } from "@/actions/actions";
 import { unstable_cache } from "next/cache";
 
 const fetchPosts = async () => {
+  const me = await prisma.user.findUnique({
+    where: {
+      email: "xunruan@icloud.com",
+    },
+    include: {
+      posts: true,
+    },
+  });
+
   return prisma.post.findMany();
 };
 

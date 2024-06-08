@@ -6,8 +6,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model User {
@@ -34,13 +35,12 @@ model Post {
   // authorId  String   @unique
 
   // one to many relation
-  // author   User   @relation(fields: [authorId], references: [id])
-  // authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
 
   // many to many relation
-  authors User[]
+  // authors User[]
 
   // @@unique([title, slug]) // make a combined unique constraint
   // @@index([slug]) // make selecting slug faster, but slowing down insert
-  userId String
 }
