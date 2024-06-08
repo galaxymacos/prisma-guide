@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+// retrieve the schema type
 const initialPosts: Prisma.PostCreateInput[] = [
   {
     title: "Post 1",
@@ -20,6 +21,8 @@ const initialPosts: Prisma.PostCreateInput[] = [
     },
   },
 ];
+
+// have a main function to make it easier to use async/await
 async function main() {
   console.log("Start seeding ...");
   await prisma.post.deleteMany();
@@ -34,7 +37,7 @@ async function main() {
 
 main()
   .then(async () => {
-    await prisma.$disconnect();
+    await prisma.$disconnect(); // disconnect the client
   })
   .catch(async (e) => {
     console.error(e);

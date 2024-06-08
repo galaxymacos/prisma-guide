@@ -20,7 +20,7 @@ export async function createPost(formData: FormData) {
         },
       },
     });
-    revalidateTag("posts");
+    revalidatePath("/posts");
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
